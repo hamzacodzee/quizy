@@ -2,7 +2,6 @@ import React, { memo, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import AddQueForm from "./AddQueForm";
-import { SelectQueTypeOptions } from "../../helper/InitialValues";
 
 const AddQue = () => {
   const dispatch = useDispatch();
@@ -13,6 +12,8 @@ const AddQue = () => {
     selectQueType: '',
     question: '',
     answer: '',
+    options: []
+
   })
   const [isFormSubmit, setIsFormSubmit] = useState(false)
 
@@ -24,6 +25,7 @@ const AddQue = () => {
 
       /*  dispatch(setSubject([...(subject || []), { ...values }]));
        toast.success("Subject Added Successfully"); */
+
     },
     [addQuestionObj]
   );

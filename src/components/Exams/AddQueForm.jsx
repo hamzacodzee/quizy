@@ -3,6 +3,8 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputTextarea } from 'primereact/inputtextarea'
 import React, { memo, useMemo } from 'react'
 import { SelectQueTypeOptions } from '../../helper/InitialValues'
+import { InputText } from 'primereact/inputtext';
+
 
 const AddQueForm = ({
   subject,
@@ -43,7 +45,7 @@ const InnerFormContainer = ({
   setAddQuestionObj
 }) => {
 
-  const { answer, question, selectQueType, selectSubject } = addQuestionObj
+  const { answer, question, selectQueType, selectSubject, options } = addQuestionObj
 
   const addSubjectField = useMemo(() => {
     return (
@@ -169,6 +171,49 @@ const InnerFormContainer = ({
   ])
 
 
+  const addRadioComponent = useMemo((opID) => {
+    return (
+      <>
+        <div className="flex flex-wrap justify-content-center align-items-center gap-2">
+          <label className="w-6rem">Option {opID}:</label>
+          <InputText
+            value={options[opID]}
+            onChange={(e) => setAddQuestionObj({ ...addQuestionObj, [options[opID]]: e.target.value })}
+            id={`op${opID}`}
+            name={`op${opID}`}
+            rows={5}
+            cols={30}
+          />
+        </div>
+
+        {isFormSubmit && !options[opID] && (
+          <div className="text-red-500">Option {opID} is required!</div>
+        )}
+
+        {options[opID]?.length < 3 && (
+          <div className="text-red-500">Option {opID} should be of minimum 3 characters length!</div>
+        )}
+      </>
+    );
+  }, [addQuestionObj, isFormSubmit, options, setAddQuestionObj]);
+
+  const addAnswerRadio = useMemo(() => {
+    // Assuming you have an array of option IDs
+    const optionIDs = [1, 2, 3]; // Example array of option IDs
+
+    return (
+      <>
+        {optionIDs.map((opID) => (
+          <React.Fragment key={opID}>
+            {addRadioComponent(opID)}
+          </React.Fragment>
+        ))}
+      </>
+    );
+  }, [addRadioComponent]);
+
+
+
   const submitField = useMemo(() => {
     return (
       <Button
@@ -186,9 +231,10 @@ const InnerFormContainer = ({
       {addTypeField}
       {addQuestionField}
       {addAnswerField}
+      {addAnswerRadio}
       {submitField}
     </>
-  }, [addSubjectField, addTypeField, addQuestionField, addAnswerField, submitField])
+  }, [addSubjectField, addTypeField, addQuestionField, addAnswerField, addAnswerRadio, submitField])
   return <>{addQuestionFormField}</>
 }
 
